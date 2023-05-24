@@ -3,8 +3,13 @@ const redux = require('redux');
 // call createStore method from redux and store it in variable name createStore 
 const createStore = redux.createStore;
 
+// import from index for binding action creater 
+const bindActionCreators = redux.bindActionCreators;
+
 //Action type
 const CAKE_ORDERED = 'CAKE_ORDERED';
+// Another action type 
+const CAKE_RESTOCK = 'CAKE_RESTOCK';
 
 //function that holds our action type 
 function orderCake() {
@@ -12,7 +17,16 @@ function orderCake() {
         // type of action that performed by the user 
         type: CAKE_ORDERED,
         // number of cake that user want to buy 
-        quantity: 1,
+        payload: 1,
+    }
+}
+
+// function that restore our initialState if action type match 
+function restockCake(qty = 1) {
+    return {
+        type: CAKE_RESTOCK,
+        // payload is just name you called it anything but redux-toolkit used payload so we are called it payload for matching
+        payload: qty,
     }
 }
 
@@ -32,6 +46,13 @@ const reducer = (state = initialState, action) => {  //Reducer two arguments one
                 ...state, //here we can copy all state that available in our initialState than update only one property that match with our action type
                 numOfCakes: state.numOfCakes - 1
             }
+        // if action match be can restore our initialState 
+        case CAKE_RESTOCK: {
+            return {
+                ...state, //copy our all state and change only that match action type
+                numOfCakes: state.numOfCakes + action.payload
+            }
+        }
         //Otherwise return our state as it is
         default:
             return state
@@ -55,12 +76,17 @@ const store = createStore(reducer);
 console.log('Initial State', store.getState());
 const unsubscribe = store.subscribe(() => console.log('updated state', store.getState()));
 
-store.dispatch(orderCake());
-store.dispatch(orderCake());
-store.dispatch(orderCake());
-store.dispatch(orderCake());
-store.dispatch(orderCake());
-store.dispatch(orderCake());
+// dispatch an action to the store for ordered cake
+// store.dispatch(orderCake());
+// store.dispatch(orderCake());
+// store.dispatch(orderCake());
+// dispatch an action to the store for restore stock
+// store.dispatch(restockCake(3));
+
+const action = bindActionCreators({orderCake, restockCake}, store.dispatch);
+action.orderCake();
+action.orderCake();
+action.restockCake();
 
 // console.log();
-unsubscribe();
+// unsubscribe();
