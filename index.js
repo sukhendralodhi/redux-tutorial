@@ -6,10 +6,16 @@ const createStore = redux.createStore;
 // import from index for binding action creater 
 const bindActionCreators = redux.bindActionCreators;
 
-//Action type
-const CAKE_ORDERED = 'CAKE_ORDERED';
+//Action type for cake
 // Another action type 
+const CAKE_ORDERED = 'CAKE_ORDERED';
 const CAKE_RESTOCK = 'CAKE_RESTOCK';
+//Action type for ice-cream
+const ICE_CREAM_ORDERED = 'ICE_CREAM_ORDERED';
+const ICE_CREAM_RESTOCK = 'ICE_CREAM_RESTOCK';
+
+
+/*this function belong to cake*/
 
 //function that holds our action type 
 function orderCake() {
@@ -30,12 +36,34 @@ function restockCake(qty = 1) {
     }
 }
 
+/*this function belong to cake*/
+
+/*this function belong to ice-cream*/
+function orderIceCream() {
+    return {
+        type: ICE_CREAM_ORDERED,
+        payload: 1
+    }
+}
+
+function restockIceCream(qty = 1) {
+    return {
+        type: ICE_CREAM_RESTOCK,
+        payload: qty
+    }
+}
+/*this function belong to ice-cream*/
+
 //Our initial state where we can declare object and our initial state 
 const initialState = {
     // first state value 
     numOfCakes: 10,
     // second state value 
     numOfCakesOrdered: 0,
+    // third state value
+    numOfIceCream: 10,
+    // fourth state value
+    numOfIceCreamOrdered: 0,
 }
 
 const reducer = (state = initialState, action) => {  //Reducer two arguments one is previous state and action that happened in our application
@@ -47,11 +75,21 @@ const reducer = (state = initialState, action) => {  //Reducer two arguments one
                 numOfCakes: state.numOfCakes - 1
             }
         // if action match be can restore our initialState 
-        case CAKE_RESTOCK: {
+        case CAKE_RESTOCK:
             return {
                 ...state, //copy our all state and change only that match action type
                 numOfCakes: state.numOfCakes + action.payload
             }
+
+        case ICE_CREAM_ORDERED: 
+            return {
+                ...state,
+                numOfIceCream: state.numOfIceCream - 1
+            }
+        case ICE_CREAM_RESTOCK: 
+        return {
+            ...state,
+            numOfIceCream: state.numOfIceCream + action.payload
         }
         //Otherwise return our state as it is
         default:
@@ -83,10 +121,12 @@ const unsubscribe = store.subscribe(() => console.log('updated state', store.get
 // dispatch an action to the store for restore stock
 // store.dispatch(restockCake(3));
 
-const action = bindActionCreators({orderCake, restockCake}, store.dispatch);
-action.orderCake();
-action.orderCake();
-action.restockCake();
+const action = bindActionCreators({ orderCake, restockCake, orderIceCream, restockIceCream }, store.dispatch);
+// action.orderCake();
+// action.orderCake();
+// action.restockCake();
 
 // console.log();
 // unsubscribe();
+action.orderIceCream();
+action.restockIceCream();
