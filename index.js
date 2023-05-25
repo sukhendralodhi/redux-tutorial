@@ -3,7 +3,7 @@ const redux = require('redux');
 // call createStore method from redux and store it in variable name createStore 
 const createStore = redux.createStore;
 
-// import from index for binding action creater 
+// import from index for binding action creator 
 const bindActionCreators = redux.bindActionCreators;
 
 //Action type for cake
@@ -57,18 +57,29 @@ function restockIceCream(qty = 1) {
 /*this function belong to ice-cream*/
 
 //Our initial state where we can declare object and our initial state 
-const initialState = {
-    // first state value 
-    numOfCakes: 10,
-    // second state value 
-    numOfCakesOrdered: 0,
-    // third state value
-    numOfIceCream: 10,
-    // fourth state value
-    numOfIceCreamOrdered: 0,
+// const initialState = {
+//     // first state value 
+//     numOfCakes: 10,
+//     // second state value 
+//     // numOfCakesOrdered: 0,
+//     // third state value
+//     numOfIceCream: 20,
+//     // fourth state value
+//     // numOfIceCreamOrdered: 0,
+// }
+
+// individual state for cake 
+const initialStateForCake = {
+    numOfCakes: 10
+}
+// individual state for ice-cream
+const initialStateForIceCream = {
+    numOfIceCream: 20
 }
 
-const reducer = (state = initialState, action) => {  //Reducer two arguments one is previous state and action that happened in our application
+
+// cake reducer
+const CakeReducer = (state = initialStateForCake, action) => {  //Reducer two arguments one is previous state and action that happened in our application
     switch (action.type) {
         //if action type matched than we update our initial state value
         case CAKE_ORDERED:
@@ -82,6 +93,15 @@ const reducer = (state = initialState, action) => {  //Reducer two arguments one
                 ...state, //copy our all state and change only that match action type
                 numOfCakes: state.numOfCakes + action.payload
             }
+        //Otherwise return our state as it is
+        default:
+            return state
+    }
+}
+
+// ice cream reducer
+const iceCreamReducer = (state = initialStateForIceCream, action) => {
+    switch (action.type) {
         //if action type matched than we update our initial state value
         case ICE_CREAM_ORDERED:
             return {
@@ -125,11 +145,14 @@ const unsubscribe = store.subscribe(() => console.log('updated state', store.get
 // store.dispatch(restockCake(3));
 
 const action = bindActionCreators({ orderCake, restockCake, orderIceCream, restockIceCream }, store.dispatch);
-// action.orderCake();
-// action.orderCake();
-// action.restockCake();
+
+action.orderCake();
+action.orderCake();
+action.orderCake();
+action.restockCake(3);
 
 // console.log();
 // unsubscribe();
 action.orderIceCream();
-action.restockIceCream();
+action.orderIceCream();
+action.restockIceCream(2);
