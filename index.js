@@ -39,6 +39,7 @@ function restockCake(qty = 1) {
 /*this function belong to cake*/
 
 /*this function belong to ice-cream*/
+// for order ICE_CREAM_ORDERED
 function orderIceCream() {
     return {
         type: ICE_CREAM_ORDERED,
@@ -46,6 +47,7 @@ function orderIceCream() {
     }
 }
 
+// for restockIceCream
 function restockIceCream(qty = 1) {
     return {
         type: ICE_CREAM_RESTOCK,
@@ -80,17 +82,18 @@ const reducer = (state = initialState, action) => {  //Reducer two arguments one
                 ...state, //copy our all state and change only that match action type
                 numOfCakes: state.numOfCakes + action.payload
             }
-
-        case ICE_CREAM_ORDERED: 
+        //if action type matched than we update our initial state value
+        case ICE_CREAM_ORDERED:
             return {
-                ...state,
+                ...state, //copy our all state and change only that match action type
                 numOfIceCream: state.numOfIceCream - 1
             }
-        case ICE_CREAM_RESTOCK: 
-        return {
-            ...state,
-            numOfIceCream: state.numOfIceCream + action.payload
-        }
+        // if action match be can restore our initialState 
+        case ICE_CREAM_RESTOCK:
+            return {
+                ...state, //copy our all state and change only that match action type
+                numOfIceCream: state.numOfIceCream + action.payload
+            }
         //Otherwise return our state as it is
         default:
             return state
